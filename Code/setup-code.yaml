@@ -1,22 +1,22 @@
-Description:  This template deploys a se bucket and creates a Glue IAM service role of the AWS Glue Course by Johnny Chivers
+Description:  This template deploys a se bucket and creates a Glue IAM service role of the AWS Glue Project
 Parameters:
   S3BucketForCourse: 
-    Description: Please enter the name for your S3 bucket. This will used throughout the "course" and must be unique globablly within AWS. 
+    Description: Please enter the name for your S3 bucket. This will used throughout the project and must be unique globablly within AWS. 
     Type: String 
 
 Resources:
-  S3BucketForAWSGlueCourse:
+  S3BucketForAWSGlueProject:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref S3BucketForCourse
+      BucketName: !Ref S3BucketForProject
       Tags:
         - Key: "course"
-          Value: "AWSGlueJohnnyChivers"
+          Value: "AWSGlueLeoG"
 
   GlueIAMRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: AWSGlueCourse
+      RoleName: AWSGlueProject
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -27,7 +27,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: AWSGlueCourseServicePolicy
+        - PolicyName: AWSGlueProjectServicePolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -60,10 +60,10 @@ Resources:
                 Resource: 
                   - arn:aws:s3:::aws-glue-*/*
                   - arn:aws:s3:::*/*aws-glue-*/*
-                  - !GetAtt S3BucketForAWSGlueCourse.Arn
+                  - !GetAtt S3BucketForAWSGlueProject.Arn
                   - !Join 
                     - ''
-                    - - !GetAtt S3BucketForAWSGlueCourse.Arn
+                    - - !GetAtt S3BucketForAWSGlueProject.Arn
                       - /*
               - Effect: Allow
                 Action: 
@@ -93,8 +93,8 @@ Resources:
   MyAthenaWorkGroup:
     Type: AWS::Athena::WorkGroup
     Properties:
-      Name: AWSGlueCourseAthenaWorkgroup
-      Description: The workgroup for the johnny chivers aws glue course. 
+      Name: AWSGlueProjectAthenaWorkgroup
+      Description: The workgroup for the Leo G aws glue project. 
       State: ENABLED
       WorkGroupConfiguration:
         BytesScannedCutoffPerQuery: 200000000
@@ -102,8 +102,8 @@ Resources:
         PublishCloudWatchMetricsEnabled: false
         RequesterPaysEnabled: true
         ResultConfiguration:
-          OutputLocation: !Sub s3://${S3BucketForAWSGlueCourse}/athena
+          OutputLocation: !Sub s3://${S3BucketForAWSGlueProject}/athena
 Outputs:
   S3Bucket:
     Description: A reference to the created S3 bucket
-    Value: !Ref S3BucketForAWSGlueCourse
+    Value: !Ref S3BucketForAWSGlueProject
